@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Search streaming movie</title>
+    <style>
+       body {
+        min-width: 530px;
+        overflow-x: hidden;
+        font-family: sans-serif;
+        height: 100%;
+        padding: 0px;
+        margin: 0px;
+      }
+      
+      #popup {
+        position: relative;
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+      }
+      
+      #errMsg {
+      	color: red;
+      	text-align: center;
+      	width: 100%;
+      }
+      ul {
+      	margin: 0px;
+      	padding: 0px;
+      	list-style-type: none;
+      }
+      
+      #title {
+      margin: 5px 10px 5px 10px; 
+      }
+      
+      li {
+      	border: 1px solid lightgrey;
+      	font-size: 12px;
+	    display: block;
+	  	vertical-align: bottom;
+	  	width: 115px;
+	  	height: 245px;
+	  	margin: 0 5px 5px 0;
+	  	padding: 5px;
+	  	float: left;
+	  }
+	  
+	  li img {
+        border: 2px solid black;
+        vertical-align: middle;
+        width: 110px;
+        height: 156px;
+        display: block;
+        margin-bottom: 5px;
+      }
+	  
+	  li a.logo {
+	  	width: 110px;
+	  	display: block;
+	  }
+	  
+	  a.HEADWEB {
+	  	background: url('headweb-logo.png') no-repeat;
+	  	background-size: 110px 40px;
+	  	height: 40px;
+	  }
+	  
+	  a.VIAPLAY {
+	  	background: url('viaplay-logo.png') no-repeat;
+	  	background-size: 110px 23px;
+	  	height: 23px;
+	  }
+	  a.VODDLER {
+	  	background: url('voddler-logo.png') no-repeat;
+	  	background-size: 105px 23px;
+	  	height: 23px;
+	  }
+	  
+	  a.FILM2HOME {
+	  	background: url('f2h-logo.png') no-repeat;
+	  	background-size: 110px 41px;
+	  	height: 41px;
+	  }
+	  a.SFANYTIME {
+	  	background: url('sf-logo.png') no-repeat;
+	  	background-size: 110px 37px;
+	  	height: 37px;
+	  }
+
+      .hidden {
+        display:none;
+       }
+       
+       .list-title {
+        padding-top: 20px;
+        clear:both;
+       }
+       
+       #footer {
+		   position:absolute;
+		   bottom:0;
+		   width:100%;
+		   padding: 0 -20px;
+		   height:14px;   /* Height of the footer */
+		   background:#EEE;
+		   text-align: right;
+		   font-size: 12px;
+		}
+		#footer a {
+		color: #000;
+		}
+    </style>
+
+    <!--
+      - JavaScript and HTML must be in separate files: see google extension Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: http://developer.chrome.com/extensions/contentSecurityPolicy.html
+     -->
+    <script src="jquery.js"></script>
+    <script src="popupDev.js"></script>
+  </head>
+  <body>
+    <div id="popup">
+	<h1 id="title">S&ouml;k streamingfilm:</h1>
+	<p id="errMsg" />
+	<div id="form_result" class="hidden">
+	<form id="target" action="">
+	<p><input type="text" id="movie_name" name="movie_name" value="" /> 
+           <span id="infoTxt" class="hidden">Ange film att s&ouml;ka efter</span></p>
+	</form>
+	<p id="result" />
+	</div>
+	<img id="search_img" src="searching.gif" />
+    <p id="debugField" />
+    <div id="footer"><a href="http://www.mansehr.se" target="_blank">Mansehr</a> - &copy; 2013&nbsp;&nbsp;</div>
+    </div>
+  </body>
+</html>
+

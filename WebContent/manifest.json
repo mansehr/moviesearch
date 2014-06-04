@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+
+  "name": "Swedish streamming movie search",
+  "description": "This extension is used to search movies from Swedish streaming services.",
+  "version": "0.2",
+
+  "icons": { "16": "icon.png",
+           "48": "icon48.png",
+          "128": "icon128.png" },
+          
+  "permissions": [
+    "http://www.headweb.com/",
+    "http://viaplay.se/",
+    "http://api.voddler.com/",
+    "http://sfanytime.com/",
+    "http://www.film2home.se/",
+    "http://pagediffer.appspot.com/",
+    "http://localhost:8888/"
+  ],
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  }
+
+}
