@@ -1,7 +1,7 @@
 var SERVICE_URI = "http://pagediffer.appspot.com/mansehr_moviesearch";
 
 var version = 1;
-var DEBUG = false;
+var DEBUG = true;
 var sleepIterations = 0;
 var supplierUrls = [];
 var resultArray = [];
@@ -28,9 +28,9 @@ $(function() {
 			movieName = $('#movie_name').val();
 			if (movieName != '') {
 				$('#form_result').hide();
-				$('#result').text("Hittade inga filmer");
+				$('#result').text("");
 				$('#search_img').fadeIn();
-				localStorage.setItem("movieSearchQry", movieName);
+				localStorageStore("movieSearchQry", movieName);
 
 				resetResult();
 
@@ -49,12 +49,12 @@ $(function() {
 });
 
 function loadLastSearch() {
-	var qry = localStorage.getItem("movieSearchQry");
+	var qry = localStorageLoad("movieSearchQry");
 	if (qry != undefined) {
 		$('#movie_name').val(qry);
 	}
 
-	var res = localStorage.getItem("movieSearchResult");
+	var res = localStorageLoad("movieSearchResult");
 	if (res != undefined) {
 		resetResult();
 		parseJsonResult(res);
@@ -105,7 +105,7 @@ function parseResult(data) {
 				b.movieName.toUpperCase());
 	});
 	apendListToResult(data.otherResult, 'Andra tr&auml;ffar:');
-	localStorage.setItem("movieSearchResult", JSON.stringify(data));
+	localStorageStore("movieSearchResult", JSON.stringify(data));
 }
 
 function apendListToResult(data, title) {
@@ -138,24 +138,24 @@ function parseItem(key, val) {
  * Initialize active supplier urls on pageload
  */
 function initSupplierURLs() {
-	var urls = localStorage.getItem("mansehrServiceUrls");
-	var lastAccess = localStorage.getItem("mansehrSULastAccess");
+	var urls = localStorageLoad("mansehrServiceUrls");
+	var lastAccess = localStorageLoad("mansehrSULastAccess");
 	var delta = 0;
 	if (lastAccess != undefined) {
 		var laTime = new Date(lastAccess);
 		delta = (new Date().getTime() - laTime);
 	}
 	if (urls == undefined || isNaN(delta) || delta > 1800000) {
-		localStorage.clear();
+		localStorageClear();
 		$
 				.getJSON(SERVICE_URI, {
 					suppliers : version
 				})
 				.done(
 						function(data) {
-							localStorage.setItem("mansehrServiceUrls", JSON
+							localStorageStore("mansehrServiceUrls", JSON
 									.stringify(data));
-							localStorage.setItem("mansehrSULastAccess",
+							localStorageStore("mansehrSULastAccess",
 									new Date());
 							parseUrls(data);
 						})
@@ -247,6 +247,18 @@ function parseJsonResult(xml) {
 	});
 
 	parseResult(data);
+}
+
+function localStorageLoad(id) {
+	return localStorage.getItem(id);
+}
+
+function localStorageStore(id, data) {
+	localStorage.setItem(id, data);
+}
+
+function localStorageClear() {
+	localStorage.clear();
 }
 
 var dbgTxt = '';

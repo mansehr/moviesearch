@@ -14,9 +14,9 @@
     "http://viaplay.se/",
     "http://api.voddler.com/",
     "http://sfanytime.com/",
-    "http://www.film2home.se/",
+    "https://www.film2home.se/",
     "http://pagediffer.appspot.com/",
-    "http://localhost:8888/"
+    "storage"
   ],
   "browser_action": {
     "default_icon": "icon.png",
