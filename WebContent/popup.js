@@ -1,6 +1,6 @@
 var SERVICE_URI = "http://pagediffer.appspot.com/mansehr_moviesearch";
 
-var version = 1;
+var version = 2;
 var DEBUG = true;
 var sleepIterations = 0;
 var supplierUrls = [];

@@ -16,6 +16,9 @@
     "http://sfanytime.com/",
     "https://www.film2home.se/",
     "http://pagediffer.appspot.com/",
+    "http://www.swefilmer.com/",
+	"http://www.dreamfilm.se/",
+	"http://www.tfplay.org/",
     "storage"
   ],
   "browser_action": {
