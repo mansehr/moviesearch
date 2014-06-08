@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
   <head>
+	<meta charset="UTF-8">
     <title>Search streaming movie</title>
     <style>
        body {
@@ -28,11 +29,6 @@
       	text-align: center;
       	width: 100%;
       }
-      ul {
-      	margin: 0px;
-      	padding: 0px;
-      	list-style-type: none;
-      }
       
       #title {
       	margin: 5px 10px 5px 10px; 
@@ -45,9 +41,22 @@
 	  	width: 48px;
 	  	float: right;
 		border: none;
+		cursor: pointer
       }
       
-      li {
+      #settings {
+	  	float: right;
+		border: 1px solid black;
+		background-color: #fffffc;
+      }
+      
+      ul {
+      	margin: 0px;
+      	padding: 0px;
+      	list-style-type: none;
+      }
+      
+      .movie_list li {
       	border: 1px solid lightgrey;
       	font-size: 12px;
 	    display: block;
@@ -59,7 +68,7 @@
 	  	float: left;
 	  }
 	  
-	  li img {
+	  .movie_list li img {
         border: 2px solid black;
         vertical-align: middle;
         width: 110px;
@@ -135,16 +144,22 @@
   </head>
   <body>
     <div id="popup">
-    <button id="settings_lnk" ></button>
+    
+	<a id="settings_lnk" ></a>
+	
 	<h1 id="title">S&ouml;k streamingfilm:</h1>
 	<p id="errMsg" />
 	<p id="infoMsg" />
 	<div id="form_result" class="hidden">
-	<div id="settings" class="hidden"><ul><li>Filmtjänst</li><li>Filmtjänst2</li></ul></div>
+	
 	<form id="target" action="">
-		<p><input type="text" id="movie_name" name="movie_name" value="" /> 
-           <span id="infoTxt" class="hidden">Ange film att s&ouml;ka efter</span></p>
+		<input type="text" id="movie_name" name="movie_name" value="" placeholder="Ange film att söka efter" size=60 /> 
 	</form>
+	<div id="settings">
+    	Filmtj&auml;nster:
+		<ul id="suppliers_list"></ul>
+	</div>
+    
 	</div>
 	<img id="search_img" src="searching.gif" />
     <p id="debugField" />

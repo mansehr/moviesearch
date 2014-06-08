@@ -4,6 +4,7 @@ var version = 2;
 var DEBUG = true;
 var sleepIterations = 0;
 var supplierUrls = [];
+var supplierUse = {};
 var resultArray = [];
 var movieName = '';
 
@@ -48,8 +49,10 @@ $(function() {
 	});
 	
 	$('#settings_lnk').click(function () {
-		$('#settings').show();
+		$('#settings').toggle('slow');
 	});
+
+	$('#settings').delay(2000).hide('slow');
 });
 
 function loadLastSearch() {
@@ -85,7 +88,6 @@ function resetSearch() {
 	$('#search_img').hide();
 	$('#form_result').show();
 	$('#movie_name').focus();
-	$("#infoTxt").css('display', 'inline').fadeOut(5000);
 }
 
 function resetResult() {
@@ -124,7 +126,7 @@ function apendListToResult(data, title) {
 			html : title
 		}).appendTo('#result');
 		$('<ul/>', {
-			'class' : 'my-new-list',
+			'class' : 'movie_list',
 			html : items.join('')
 		}).appendTo('#result');
 	}
@@ -145,6 +147,13 @@ function initSupplierURLs() {
 	infoMsg("Laddar filmtjänster");
 	var urls = localStorageLoad("mansehrServiceUrls");
 	var lastAccess = localStorageLoad("mansehrSULastAccess");
+	supplierUse = localStorageLoad("mansehrSupplierUse");
+	// Skapa en associative array om den inte finns
+	if(supplierUse == undefined) {
+		supplierUse = {};
+	} else {
+		supplierUse = JSON.parse(supplierUse);
+	}
 	var delta = 0;
 	if (lastAccess != undefined) {
 		var laTime = new Date(lastAccess);
@@ -158,11 +167,13 @@ function initSupplierURLs() {
 				})
 				.done(
 						function(data) {
+							parseUrls(data, true);
 							localStorageStore("mansehrServiceUrls", JSON
 									.stringify(data));
 							localStorageStore("mansehrSULastAccess",
 									new Date());
-							parseUrls(data);
+							localStorageStore("mansehrSupplierUse", 
+										JSON.stringify(supplierUse));
 							showForm();
 						})
 				.fail(
@@ -175,20 +186,37 @@ function initSupplierURLs() {
 						});
 	} else {
 		// Load cache
-		parseUrls(JSON.parse(urls));
+		parseUrls(JSON.parse(urls), false);
 		showForm();
 	}
 	infoMsg("");
 }
 
-function parseUrls(data) {
+function parseUrls(data, forceUse) {
+	var settingsList = '';
 	$.each(data, function(key, val) {
-		debug(val.supplierId);
 		var res = new Object();
 		res.id = val.supplierId;
 		res.url = val.url;
 		supplierUrls.push(res);
+		
+		if(forceUse) {
+			supplierUse[res.id] = true;
+		} else if(supplierUse[res.id] == undefined) {
+			supplierUse[res.id] = false;
+		}
+		settingsList += '<li><input type="checkbox" '+(supplierUse[res.id] ? 'checked' : '')+' id="'+res.id+'">'+res.id+'</input></li>';
 	});
+	
+	$('#suppliers_list').append(settingsList);
+	
+	$('#settings input').click(toggleUse);
+}
+
+function toggleUse(event) {
+	var id = event.target.id;
+	supplierUse[id] = !supplierUse[id];
+	localStorageStore("mansehrSupplierUse", JSON.stringify(supplierUse));
 }
 
 function searchSuppliers() {
@@ -198,6 +226,9 @@ function searchSuppliers() {
 }
 
 function callSupplier(sup) {
+	if(supplierUse[sup.id] == false) {
+		return;
+	}
 	try {
 		var req = new XMLHttpRequest();
 		req.open("GET", sup.url + movieName, true);
@@ -285,7 +316,7 @@ function showForm() {
 
 var dbgTxt = '';
 function debug(txt) {
-	dbgTxt = dbgTxt + txt + '<br/>';
+	dbgTxt = dbgTxt + JSON.stringify(txt) + '<br/>';
 	if (DEBUG)
 		$('#debugField').html(dbgTxt);
 }
