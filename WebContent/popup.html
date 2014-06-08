@@ -6,7 +6,7 @@
        body {
         min-width: 530px;
         overflow-x: hidden;
-        font-family: sans-serif;
+        font-family: Arial, sans-serif;
         height: 100%;
         padding: 0px;
         margin: 0px;
@@ -17,6 +17,10 @@
         height: 100%;
         margin: 0px;
         padding: 0px;
+      }
+      
+      #target {
+      	display: none;
       }
       
       #errMsg {
@@ -31,7 +35,16 @@
       }
       
       #title {
-      margin: 5px 10px 5px 10px; 
+      	margin: 5px 10px 5px 10px; 
+      }
+      
+      #settings_lnk {
+      	background: url('settings.png') no-repeat;
+	  	background-size: 48px 48px;
+	  	height: 48px;
+	  	width: 48px;
+	  	float: right;
+		border: none;
       }
       
       li {
@@ -122,11 +135,13 @@
   </head>
   <body>
     <div id="popup">
+    <button id="settings_lnk" ></button>
 	<h1 id="title">S&ouml;k streamingfilm:</h1>
 	<p id="errMsg" />
+	<p id="infoMsg" />
 	<div id="form_result" class="hidden">
 	<form id="target" action="">
-	<p><input type="text" id="movie_name" name="movie_name" value="" /> 
+		<p><input type="text" id="movie_name" name="movie_name" value="" /> 
            <span id="infoTxt" class="hidden">Ange film att s&ouml;ka efter</span></p>
 	</form>
 	</div>

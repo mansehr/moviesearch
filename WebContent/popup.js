@@ -46,6 +46,10 @@ $(function() {
 		}
 		form.preventDefault();
 	});
+	
+	$('#settings_lnk').click(function () {
+		
+	});
 });
 
 function loadLastSearch() {
@@ -98,7 +102,7 @@ function parseResult(data) {
 	data.goodMatchResult.sort(function(a, b) {
 		return a.price - b.price;
 	});
-	apendListToResult(data.goodMatchResult, 'Bra tr&auml;ffar:');
+	apendListToResult(data.goodMatchResult, 'Tr&auml;ffar:');
 
 	data.otherResult.sort(function(a, b) {
 		return a.movieName.toUpperCase().localeCompare(
@@ -138,6 +142,7 @@ function parseItem(key, val) {
  * Initialize active supplier urls on pageload
  */
 function initSupplierURLs() {
+	infoMsg("Laddar filmtjänster");
 	var urls = localStorageLoad("mansehrServiceUrls");
 	var lastAccess = localStorageLoad("mansehrSULastAccess");
 	var delta = 0;
@@ -158,6 +163,7 @@ function initSupplierURLs() {
 							localStorageStore("mansehrSULastAccess",
 									new Date());
 							parseUrls(data);
+							showForm();
 						})
 				.fail(
 						function(jqxhr, textStatus, error) {
@@ -168,8 +174,11 @@ function initSupplierURLs() {
 											"Anropet f&ouml;r att h&auml;mta filmtj&auml;nster misslyckades. Kontrollera att du &auml;r ansluten till internet.");
 						});
 	} else {
+		// Load cache
 		parseUrls(JSON.parse(urls));
+		showForm();
 	}
+	infoMsg("");
 }
 
 function parseUrls(data) {
@@ -261,9 +270,22 @@ function localStorageClear() {
 	localStorage.clear();
 }
 
+function showSettings() {
+	infoMsg('hello');
+}
+
+function infoMsg(text) {
+	$("#infoMsg").html(text);
+}
+
+function showForm() {
+	$('#target').show();
+	$('#movie_name').focus();
+}
+
 var dbgTxt = '';
 function debug(txt) {
 	dbgTxt = dbgTxt + txt + '<br/>';
 	if (DEBUG)
-		$('#debugField').text(dbgTxt);
+		$('#debugField').html(dbgTxt);
 }
