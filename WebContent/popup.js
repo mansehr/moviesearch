@@ -48,7 +48,7 @@ $(function() {
 	});
 	
 	$('#settings_lnk').click(function () {
-		
+		$('#settings').show();
 	});
 });
 
