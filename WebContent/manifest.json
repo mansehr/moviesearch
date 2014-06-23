@@ -3,7 +3,7 @@
 
   "name": "Swedish streamming movie search",
   "description": "This extension is used to search movies from Swedish streaming services.",
-  "version": "0.2",
+  "version": "0.2.1",
 
   "icons": { "16": "icon.png",
            "48": "icon48.png",

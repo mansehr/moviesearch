@@ -9,19 +9,21 @@
         overflow-x: hidden;
         font-family: Arial, sans-serif;
         height: 100%;
-        padding: 0px;
-        margin: 0px;
+        padding: 0;
+        margin: 0;
       }
       
       #popup {
         position: relative;
         height: 100%;
-        margin: 0px;
-        padding: 0px;
+        margin: 0;
+        padding: 0;
       }
       
       #target {
       	display: none;
+      	float: left;
+      	margin-left: 10px;
       }
       
       #errMsg {
@@ -30,24 +32,34 @@
       	width: 100%;
       }
       
-      #title {
-      	margin: 5px 10px 5px 10px; 
+      h1, h2 {
+      	margin: 10px 0 0 10px;
       }
       
       #settings_lnk {
       	background: url('settings.png') no-repeat;
-	  	background-size: 48px 48px;
-	  	height: 48px;
-	  	width: 48px;
+	  	background-size: 24px 24px;
+	  	height: 24px;
+	  	width: 24px;
 	  	float: right;
 		border: none;
 		cursor: pointer
       }
-      
+
       #settings {
 	  	float: right;
-		border: 1px solid black;
+		margin: 1em; 
+      }
+      
+      #settings #suppliers_list {
+	  	border: 1px solid black;
 		background-color: #fffffc;
+		width: 140px;
+		float: right; 
+      }
+      
+      #search_img {
+      	margin-left: 10px;
       }
       
       ul {
@@ -66,6 +78,7 @@
 	  	margin: 0 5px 5px 0;
 	  	padding: 5px;
 	  	float: left;
+	  	overflow: hidden;
 	  }
 	  
 	  .movie_list li img {
@@ -78,38 +91,12 @@
       }
 	  
 	  li a.logo {
-	  	width: 110px;
 	  	display: block;
+	  	background-size: 110px 35px;
+	  	width: 110px;
+	  	height: 35px;
 	  }
 	  
-	  a.HEADWEB {
-	  	background: url('headweb-logo.png') no-repeat;
-	  	background-size: 110px 40px;
-	  	height: 40px;
-	  }
-	  
-	  a.VIAPLAY {
-	  	background: url('viaplay-logo.png') no-repeat;
-	  	background-size: 110px 23px;
-	  	height: 23px;
-	  }
-	  a.VODDLER {
-	  	background: url('voddler-logo.png') no-repeat;
-	  	background-size: 105px 23px;
-	  	height: 23px;
-	  }
-	  
-	  a.FILM2HOME {
-	  	background: url('f2h-logo.png') no-repeat;
-	  	background-size: 110px 41px;
-	  	height: 41px;
-	  }
-	  a.SFANYTIME {
-	  	background: url('sf-logo.png') no-repeat;
-	  	background-size: 110px 37px;
-	  	height: 37px;
-	  }
-
       .hidden {
         display:none;
        }
@@ -126,10 +113,11 @@
 		   background:#EEE;
 		   text-align: right;
 		   font-size: 12px;
+		   marign-top: 1em;
 		   clear: both;
 		}
 		#footer a {
-		color: #000;
+			color: #000;
 		}
     </style>
 
@@ -143,28 +131,24 @@
     <script src="popup.js"></script>
   </head>
   <body>
+  	<p id="debugField" class="hidden" />
     <div id="popup">
-    
-	<a id="settings_lnk" ></a>
-	
-	<h1 id="title">S&ouml;k streamingfilm:</h1>
-	<p id="errMsg" />
-	<p id="infoMsg" />
-	<div id="form_result" class="hidden">
-	
-	<form id="target" action="">
-		<input type="text" id="movie_name" name="movie_name" value="" placeholder="Ange film att söka efter" size=60 /> 
-	</form>
-	<div id="settings">
-    	Filmtj&auml;nster:
-		<ul id="suppliers_list"></ul>
-	</div>
-    
-	</div>
-	<img id="search_img" src="searching.gif" />
-    <p id="debugField" />
-    <p id="result" />
-    <div id="footer"><a href="http://www.mansehr.se" target="_blank">Mansehr</a> - &copy; 2013&nbsp;&nbsp;</div>
+	    <div id="settings">
+		<a id="settings_lnk" ></a>
+			<ul id="suppliers_list" class="hidden"><li>Filmtj&auml;nster:</li></ul>
+		</div>
+		
+		<h1 id="title">S&ouml;k streamingfilm:</h1>
+		<p id="errMsg" class="hidden" />
+		<p id="infoMsg" class="hidden" />
+		<div id="form_result" class="hidden">
+			<form id="target" action="">
+				<input type="text" id="movie_name" name="movie_name" value="" placeholder="Ange film att söka efter" size=53 /> 
+			</form>
+		</div>
+		<img id="search_img" src="./loading.gif" />
+	    <p id="result" />
+	    <div id="footer"><a href="http://www.mansehr.se" target="_blank">Mansehr</a> - &copy; 2013&nbsp;&nbsp;</div>
     </div>
   </body>
 </html>

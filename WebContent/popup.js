@@ -18,8 +18,6 @@ $(function() {
 	// Load last search
 	loadLastSearch();
 
-	resetSearch();
-
 	$('#target').submit(function(form) {
 
 		if (supplierUrls.length == 0) {
@@ -49,10 +47,10 @@ $(function() {
 	});
 	
 	$('#settings_lnk').click(function () {
-		$('#settings').toggle('slow');
+		$('#suppliers_list').toggle('slow');
 	});
-
-	$('#settings').delay(2000).hide('slow');
+	
+	resetSearch();
 });
 
 function loadLastSearch() {
@@ -125,6 +123,7 @@ function apendListToResult(data, title) {
 			'class' : 'list-title',
 			html : title
 		}).appendTo('#result');
+		
 		$('<ul/>', {
 			'class' : 'movie_list',
 			html : items.join('')
@@ -133,11 +132,13 @@ function apendListToResult(data, title) {
 }
 
 function parseItem(key, val) {
+	var sup = supplierUrls[val.supplier];
 	return '<li id="' + key + '"><a href="' + val.url
 			+ '" target="_blank"><img src="' + val.imgUrl + '" alt="'
 			+ val.movieName + '" /></a>' + val.movieName + '<br/>Pris: '
 			+ val.price + ':-<br/><a href="' + val.url
-			+ '" target="_blank" class="logo ' + val.supplier + '"></a></li>';
+			+ '" target="_blank" class="logo" style="background: url('
+			+ sup.logoUrl + ') no-repeat;"></a></li>';
 }
 
 /**
@@ -195,10 +196,13 @@ function initSupplierURLs() {
 function parseUrls(data, forceUse) {
 	var settingsList = '';
 	$.each(data, function(key, val) {
-		var res = new Object();
+		var res = {};
 		res.id = val.supplierId;
 		res.url = val.url;
-		supplierUrls.push(res);
+		res.logoUrl = val.logoUrl;
+		res.name = val.name;
+		//supplierUrls.push(res);
+		supplierUrls[res.id] = res;
 		
 		if(forceUse) {
 			supplierUse[res.id] = true;
@@ -299,10 +303,6 @@ function localStorageStore(id, data) {
 
 function localStorageClear() {
 	localStorage.clear();
-}
-
-function showSettings() {
-	infoMsg('hello');
 }
 
 function infoMsg(text) {
