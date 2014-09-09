@@ -1,11 +1,11 @@
 <!doctype html>
-<html>
+<html xmlns:ng="http://angularjs.org" ng-app="MovieSearchApp">
   <head>
 	<meta charset="UTF-8">
     <title>Search streaming movie</title>
     <style>
        body {
-        min-width: 530px;
+        min-width: 540px;
         overflow-x: hidden;
         font-family: Arial, sans-serif;
         height: 100%;
@@ -17,16 +17,10 @@
         position: relative;
         height: 100%;
         margin: 0;
-        padding: 0;
+        padding: 5px;
       }
       
-      #target {
-      	display: none;
-      	float: left;
-      	margin-left: 10px;
-      }
-      
-      #errMsg {
+      .errorMessage {
       	color: red;
       	text-align: center;
       	width: 100%;
@@ -34,6 +28,10 @@
       
       h1, h2 {
       	margin: 10px 0 0 10px;
+      }
+      
+      form {
+      	display: block;
       }
       
       #settings_lnk {
@@ -54,13 +52,20 @@
       #settings #suppliers_list {
 	  	border: 1px solid black;
 		background-color: #fffffc;
-		width: 140px;
+		width: 180px;
 		float: right; 
       }
       
       #search_img {
-      	margin-left: 10px;
-      }
+      	margin: 20px;
+     
+	    -webkit-transition:all linear 0.5s;
+	    transition:all linear 0.5s;
+	   }
+		
+	   #search_img.ng-hide {
+		 opacity:0;
+	   }
       
       ul {
       	margin: 0px;
@@ -81,7 +86,7 @@
 	  	overflow: hidden;
 	  }
 	  
-	  .movie_list li img {
+	  .movie_list li .movieImg {
         border: 2px solid black;
         vertical-align: middle;
         width: 110px;
@@ -90,7 +95,7 @@
         margin-bottom: 5px;
       }
 	  
-	  li a.logo {
+	  li a .logo {
 	  	display: block;
 	  	background-size: 110px 35px;
 	  	width: 110px;
@@ -104,6 +109,11 @@
        .list-title {
         padding-top: 20px;
         clear:both;
+       }
+       
+       #debugField {
+       	color: red;
+       	word-wrap: pre;
        }
        
        #footer {
@@ -120,36 +130,61 @@
 			color: #000;
 		}
     </style>
-
-    <!--
+  </head>
+  <body ng-controller="MovieSearchCtrl"> 
+  	<p id="debugField" ng-show="debugMessage != '' && mode == 'dev'">{{debugMessage}}</p>
+    <div id="popup">
+	    <div id="settings">
+			<ul id="suppliers_list" >
+			  <li>Filmtjänster:</li>
+			  <li ng-repeat="url in supplierUrls track by $index" >
+				<input type="checkbox" ng-model="url.use" ng-change="updateLocalStore()">
+				<a href="{{url.url}}{{movieName}}" target="_blank">{{url.id}}</a></input>
+				({{url.hits["good"]}}/{{url.hits["tot"]}})
+			  </li>
+			</ul>
+		</div>
+		
+		<img id="search_img" src="./loading.gif" ng-show="!showForm" />
+		
+		<p id="message" ng-show="message != ''" ng-class="{errorMessage: errorMessage}">{{message}}</p>
+		
+		<form ng-submit="formSubmit()" ng-show="showForm">
+			<h1 id="title">Sök streamingfilm:</h1>
+			<input type="text" id="movie_name" ng-model="movieName" focus-me placeholder="Ange film att söka efter" size=53 /> 
+		</form>
+		
+		<script type="text/ng-template" id="/ms-result-list-item.html">
+			<div ng-show="items.length > 0">
+				<h2 class="list-title">{{title}}</h2>
+				<ul class="movie_list">
+					<li ng-repeat="item in items | orderBy:orderby:false">
+						<a href="{{item.url}}" target="_blank">
+							<img  class="movieImg" src="{{item.imgUrl}}" alt={{item.movieName}} />
+							{{item.movieName}} <br/>
+							Pris: {{item.price}}:-<br/>
+							<img class="logo" ng-src="{{item.logoUrl}}" />
+						</a>
+					</li>
+				</ul>
+			</div>
+		</script>
+		
+	    <div ms-result-list items="result.good" title="Bra träffar" orderby="price"></div>
+	    <div ms-result-list items="result.other" title="Andra träffar" orderby="name"></div>
+	    
+	    <div id="footer"><a href="http://www.mansehr.se" target="_blank">Mansehr</a> - &copy; 2014&nbsp;&nbsp;</div>
+    </div>
+    
+     <!--
       - JavaScript and HTML must be in separate files: see google extension Content Security
       - Policy documentation[1] for details and explanation.
       -
       - [1]: http://developer.chrome.com/extensions/contentSecurityPolicy.html
      -->
-    <script src="jquery.js"></script>
+     <script src="jquery.js"></script>
+    <script src="angular.js"></script>
     <script src="popup.js"></script>
-  </head>
-  <body>
-  	<p id="debugField" class="hidden" />
-    <div id="popup">
-	    <div id="settings">
-		<a id="settings_lnk" ></a>
-			<ul id="suppliers_list" class="hidden"><li>Filmtj&auml;nster:</li></ul>
-		</div>
-		
-		<h1 id="title">S&ouml;k streamingfilm:</h1>
-		<p id="errMsg" class="hidden" />
-		<p id="infoMsg" class="hidden" />
-		<div id="form_result" class="hidden">
-			<form id="target" action="">
-				<input type="text" id="movie_name" name="movie_name" value="" placeholder="Ange film att söka efter" size=53 /> 
-			</form>
-		</div>
-		<img id="search_img" src="./loading.gif" />
-	    <p id="result" />
-	    <div id="footer"><a href="http://www.mansehr.se" target="_blank">Mansehr</a> - &copy; 2013&nbsp;&nbsp;</div>
-    </div>
   </body>
 </html>
 

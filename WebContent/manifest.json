@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
 
-  "name": "Swedish streamming movie search",
-  "description": "This extension is used to search movies from Swedish streaming services.",
-  "version": "0.2.1",
+  "name": "Filmsök",
+  "description": "Sök efter streamingsbara filmer på svenska distributörers sidor",
+  "version": "0.3.1",
 
   "icons": { "16": "icon.png",
            "48": "icon48.png",
@@ -15,7 +15,7 @@
     "http://api.voddler.com/",
     "http://sfanytime.com/",
     "https://www.film2home.se/",
-    "http://pagediffer.appspot.com/",
+    "http://mansehrmoviesearch.appspot.com/",
     "http://www.swefilmer.com/",
 	"http://www.dreamfilm.se/",
 	"http://www.tfplay.org/",
