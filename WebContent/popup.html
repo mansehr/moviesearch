@@ -138,27 +138,27 @@
 			<ul id="suppliers_list" >
 			  <li>Filmtjänster:</li>
 			  <li ng-repeat="url in supplierUrls track by $index" >
-				<input type="checkbox" ng-model="url.use" ng-change="updateLocalStore()">
-				<a href="{{url.url}}{{movieName}}" target="_blank">{{url.id}}</a></input>
+				<label><input type="checkbox" ng-model="url.use" ng-change="updateLocalStore()"/>
+				{{url.id}}</label>
 				({{url.hits["good"]}}/{{url.hits["tot"]}})
 			  </li>
 			</ul>
 		</div>
 		
-		<img id="search_img" src="./loading.gif" ng-show="!showForm" />
-		
 		<p id="message" ng-show="message != ''" ng-class="{errorMessage: errorMessage}">{{message}}</p>
+		
+		<img id="search_img" src="./loading.gif" ng-show="!showForm" />
 		
 		<form ng-submit="formSubmit()" ng-show="showForm">
 			<h1 id="title">Sök streamingfilm:</h1>
-			<input type="text" id="movie_name" ng-model="movieName" focus-me placeholder="Ange film att söka efter" size=53 /> 
+			<input type="text" id="movie_name" ng-model="movieName" focus-me="showFormFocus" placeholder="Ange film att söka efter" size=53 /> 
 		</form>
 		
 		<script type="text/ng-template" id="/ms-result-list-item.html">
 			<div ng-show="items.length > 0">
 				<h2 class="list-title">{{title}}</h2>
 				<ul class="movie_list">
-					<li ng-repeat="item in items | orderBy:orderby:false">
+					<li ng-repeat="item in items track by $index | orderBy:orderby:false ">
 						<a href="{{item.url}}" target="_blank">
 							<img  class="movieImg" src="{{item.imgUrl}}" alt={{item.movieName}} />
 							{{item.movieName}} <br/>
@@ -171,7 +171,7 @@
 		</script>
 		
 	    <div ms-result-list items="result.good" title="Bra träffar" orderby="price"></div>
-	    <div ms-result-list items="result.other" title="Andra träffar" orderby="name"></div>
+	    <div ms-result-list items="result.other" title="Andra träffar" orderby="movieName"></div>
 	    
 	    <div id="footer"><a href="http://www.mansehr.se" target="_blank">Mansehr</a> - &copy; 2014&nbsp;&nbsp;</div>
     </div>
@@ -182,7 +182,6 @@
       -
       - [1]: http://developer.chrome.com/extensions/contentSecurityPolicy.html
      -->
-     <script src="jquery.js"></script>
     <script src="angular.js"></script>
     <script src="popup.js"></script>
   </body>

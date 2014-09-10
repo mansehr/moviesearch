@@ -5,17 +5,18 @@ var DEBUG = false;
 var sleepIterations = 0;
 
 angular.module('MovieSearchApp', []).
-controller('MovieSearchCtrl', function($scope) {
+controller('MovieSearchCtrl', function($scope, $http, $timeout) {
 	
 	if(DEBUG) {
 		$scope.mode = 'dev';
 	}
 	
+	showInfo("Laddar filmtjänster och senaste sökning");
+	
 	/**
 	 * Initialize active supplier urls on pageload
 	 */
-	function initSupplierURLs() {
-		$scope.$apply(showInfo("Laddar filmtjänster"));
+	$timeout(function () {
 		
 		var delta = 0;
 		$scope.lastAccess = localStorageLoad("mansehrSULastAccess");
@@ -28,20 +29,18 @@ controller('MovieSearchCtrl', function($scope) {
 		if (urls == undefined || isNaN(delta) || delta > 1800000) {
 			showInfo("Laddade filmtjänster från servern");
 			localStorageClear();
-			$.getJSON(SERVICE_URI, {
-					suppliers : version
-				})
-				.done(
+			$http.get(SERVICE_URI+"?suppliers="+version)
+				.success(
 					function(data) {
 						parseUrls(data, true);
 						localStorageStore("mansehrServiceUrls", JSON
 								.stringify($scope.supplierUrls));
 						localStorageStore("mansehrSULastAccess",
 								new Date());
-						$scope.$apply("showForm = true");
+						$scope.showForm = true;
 					})
-				.fail(
-					function(jqxhr, textStatus, error) {
+				.error(
+					function(data, textStatus, error) {
 						var err = textStatus + ', ' + error;
 						console.log("Request Failed: " + err);
 						showError("Anropet för att hämta filmtjänster misslyckades. Kontrollera att du är ansluten till internet.");
@@ -53,9 +52,8 @@ controller('MovieSearchCtrl', function($scope) {
 			$scope.showForm = true;
 		}
 		resetMessage();
-	}
 	
-	function loadLastSearch() {
+		// Load last search
 		$scope.movieName = localStorageLoad("movieSearchQry");
 		if ($scope.movieName === undefined) {
 			$scope.movieName = "";
@@ -67,12 +65,9 @@ controller('MovieSearchCtrl', function($scope) {
 		} else {
 			resetResult();
 		}
-	}
-	
-	initSupplierURLs();
-
-	// Load last search
-	loadLastSearch();
+		
+		$scope.showFormFocus = true;
+	}, 400);
 
 
 	$scope.formSubmit = function() {
@@ -144,26 +139,22 @@ $scope.updateLocalStore = function() {
 }
 
 function searchSuppliers() {
+	$http.defaults.transformResponse = [];
 	angular.forEach($scope.supplierUrls, function callSupplier(sup) {
 		if(sup.use == false) {
 			sup.hits = {good : '*', tot : '*'};
 			return;
 		}
-		try {
-			sup.hits = {good : 'R', tot : 'R'};
-			
-			var req = new XMLHttpRequest();
-			req.open("GET", sup.url + $scope.movieName, true);
-			req.onload = function(e) {
-				callParserService(e, sup);
-			};
-			req.onerror = function(e) {
-				supplierError(e, sup);
-			};
-			req.send(null);
-		} catch (e) {
-			supplierError(e, sup);
-		}
+		
+		sup.hits = {good : 'R', tot : 'R'};
+		
+		$http.get(sup.url + $scope.movieName)
+		.success(function(data) {
+			callParserService(data, sup);
+		})
+		.error(function(data) {
+			supplierError(data, sup);
+		});
 	});
 }
 
@@ -172,33 +163,28 @@ function supplierError(error, supplier) {
 	debug(supplier.id + ', Result error: '+error);
 }
 
-function callParserService(e, sup) {
+function callParserService(parseData, sup) {
 	sup.hits.good = 'P';
 	sup.hits.tot = 'P';
 	
-	$.post(SERVICE_URI, {
-		"supplier" : sup.id,
-		"data" : e.target.responseText,
-		"movieName" : $scope.movieName
-	// - Gör ingen filtrering på servern
-	}, 'json').done(function(data) {
+	$http.post(SERVICE_URI, 
+		"supplier=" + encodeURIComponent(sup.id) +
+		"&data=" + encodeURIComponent(parseData) +
+		"&movieName=" + encodeURIComponent($scope.movieName),
+		{headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+	).success(function(data) {
 		parseJsonResult(data, sup);
-	}).fail(function(jqxhr, textStatus, error) {
+	}).error(function(data, textStatus, error) {
 		var err = textStatus + ', ' + error;
-		supplierError(err, supplier);
-	}).always(function() {
-		debug('Callback: ' + sup.id);
-		
+		supplierError(err, sup);
 	});
 }
 
 function parseJsonResult(xml, supplier) {
-	var json = JSON.parse(xml);
-
 	supplier.hits = {good : 0, tot : 0};
-	
+	var json = JSON.parse(xml);
 	if(json.goodMatchResult) {
-		$.each(json.goodMatchResult, function(key, val) {
+		angular.forEach(json.goodMatchResult, function(val) {
 			val.logoUrl = supplier.logoUrl;
 			$scope.result.good.push(val);
 			supplier.hits.good++;
@@ -207,7 +193,7 @@ function parseJsonResult(xml, supplier) {
 	}
 
 	if(json.otherResult) {
-		$.each(json.otherResult, function(key, val) {
+		angular.forEach(json.otherResult, function(val) {
 			val.logoUrl = supplier.logoUrl;
 			$scope.result.other.push(val);
 			supplier.hits.tot++;
@@ -216,8 +202,6 @@ function parseJsonResult(xml, supplier) {
 	
 	localStorageStore("movieSearchResult", JSON.stringify($scope.result));
 	$scope.updateLocalStore();
-
-	$scope.$apply();
 }
 
 function localStorageLoad(id) {
@@ -253,10 +237,19 @@ function debug(txt) {
 	$scope.debugMessage += JSON.stringify(txt) + '\n';
 }
 
-}).directive('focusMe', function() {
+}).directive('focusMe', function($timeout, $parse) {
   return {
-	   link: function(scope, element) {
-	        element[0].focus(); 
+	   link: function(scope, element, attrs) {
+		   var model = $parse(attrs.focusMe);
+		      scope.$watch(model, function(value) {
+		   console.log('value=',value);
+	        if(value === true) { 
+		   $timeout(function() {
+			   console.log('focus');
+			   element[0].focus(); 
+		   });
+	        }
+		      });
 	   }
   	};
 }).directive('msResultList', function() {
