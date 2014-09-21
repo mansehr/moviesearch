@@ -160,7 +160,7 @@
 				<ul class="movie_list">
 					<li ng-repeat="item in items track by $index | orderBy:orderby:false ">
 						<a href="{{item.url}}" target="_blank">
-							<img  class="movieImg" src="{{item.imgUrl}}" alt={{item.movieName}} />
+							<img  class="movieImg" ng-src="{{item.imgUrl}}" src="loading.gif" alt={{item.movieName}} />
 							{{item.movieName}} <br/>
 							Pris: {{item.price}}:-<br/>
 							<img class="logo" ng-src="{{item.logoUrl}}" />
