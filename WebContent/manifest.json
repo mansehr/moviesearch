@@ -3,7 +3,7 @@
 
   "name": "Filmsök",
   "description": "Sök efter streamingsbara filmer på svenska distributörers sidor",
-  "version": "0.3.1",
+  "version": "0.3.2",
 
   "icons": { "16": "icon.png",
            "48": "icon48.png",
@@ -15,10 +15,11 @@
     "http://api.voddler.com/",
     "http://sfanytime.com/",
     "https://www.film2home.se/",
-    "http://mansehrmoviesearch.appspot.com/",
     "http://www.swefilmer.com/",
 	"http://www.dreamfilm.se/",
 	"http://www.tfplay.org/",
+	
+    "http://mansehrmoviesearch.appspot.com/",
     "storage"
   ],
   "browser_action": {
