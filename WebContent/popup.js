@@ -172,9 +172,9 @@ function callParserService(parseData, sup) {
 		"supplier=" + encodeURIComponent(sup.id) +
 		"&data=" + encodeURIComponent(parseData) +
 		"&movieName=" + encodeURIComponent($scope.movieName),
-		{headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+		{headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
 	).success(function(data) {
-		parseJsonResult(data, sup);
+		parseJsonResult(decodeURIComponent(data), sup);
 	}).error(function(data, textStatus, error) {
 		var err = textStatus + ', ' + error;
 		supplierError(err, sup);
