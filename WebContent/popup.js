@@ -86,17 +86,23 @@ controller('MovieSearchCtrl', function($scope, $http, $timeout) {
 		}
 		try {
 			if ($scope.movieName != '') {
+				showError("");
 				$scope.showForm = false;
 				
 				localStorageStore("movieSearchQry", $scope.movieName);
 
 				resetResult();
 
-				searchSuppliers();
-
-				waitUntilSearchDone();
+				if(searchSuppliers()) {
+					$timeout(function() {
+						$scope.showForm = true;
+					}, SEARCH_BLOCK_TIME);
+				} else {
+					$scope.showForm = true;
+					showError("Välj minst en filmleverantör att söka hos.");
+				}
 			} else {
-				showInfo("Ange en film att söka efter");
+				showError("Ange en film att söka efter");
 			}
 		} catch (e) {
 			debug("Request Failed: " + e);
@@ -105,24 +111,6 @@ controller('MovieSearchCtrl', function($scope, $http, $timeout) {
 			$scope.showForm = true;
 		}
 	};
-
-
-
-
-/**
- * Loop until all searchsuppliers are done
- * 
- * @returns
- */
-function waitUntilSearchDone() {
-	// We search for max 10 sec, so the user dont have to wait to long
-	if ($scope.result && $scope.result.good && $scope.result.good.length == 0 && ++sleepIterations < 20) {
-		setTimeout(waitUntilSearchDone, 500);
-		return;
-	}
-	sleepIterations = 0;
-	$scope.$apply("showForm = true");
-}
 
 function resetResult() {
 	$scope.result = {good: [], other: []};
@@ -150,11 +138,13 @@ $scope.updateLocalStore = function() {
 
 function searchSuppliers() {
 	$http.defaults.transformResponse = [];
+	var searching = false;
 	angular.forEach($scope.supplierUrls, function callSupplier(sup) {
 		if(sup.use == false) {
 			sup.hits = {good : '*', tot : '*'};
 			return;
 		}
+		searching = true;
 		
 		sup.hits = {good : 'R', tot : 'R'};
 		
@@ -166,6 +156,7 @@ function searchSuppliers() {
 			supplierError(data, sup);
 		});
 	});
+	return searching;
 }
 
 function supplierError(error, supplier) {
