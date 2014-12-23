@@ -148,22 +148,22 @@
 			<div ng-show="items.length > 0">
 				<h2 class="list-title">{{title}}</h2>
 				<ul class="movie_list">
-					<li ng-repeat="item in items track by $index | orderBy:orderby:false ">
+					<li ng-repeat="item in items | supplierFilter | orderBy:orderby track by $index">
 						<a href="{{item.url}}" target="_blank">
 							<img  class="movieImg" ng-src="{{item.imgUrl}}" src="loading.gif" alt={{item.movieName}} />
 							{{item.movieName}} <br/>
 							Pris: {{item.price}}:-<br/>
-							<img class="logo" ng-src="{{item.logoUrl}}" />
+							<img class="logo" ng-src="{{item.logoUrl}}" src="./loading.gif" />
 						</a>
 					</li>
 				</ul>
 			</div>
 		</script>
 		
-	    <div ms-result-list items="result.good" title="Bra träffar" orderby="price"></div>
+	    <div ms-result-list items="result.good" title="Träffar" orderby="price"></div>
 	    <div ms-result-list items="result.other" title="Andra träffar" orderby="movieName"></div>
 	    
-	    <div id="footer"><a href="http://www.mansehr.se" target="_blank">Mansehr</a> - &copy; 2014&nbsp;&nbsp;</div>
+	    <div id="footer"><a href="https://github.com/mansehr/moviesearch" target="_blank">Github</a> v.{{clientVersion}} <a href="http://www.mansehr.se" target="_blank">Mansehr</a> - &copy; 2014&nbsp;&nbsp;</div>
     </div>
     
      <!--

@@ -1,11 +1,15 @@
 var SERVICE_URI = "http://mansehrmoviesearch.appspot.com/mansehr_moviesearch";
 
-var version = 2;
+
+var apiVersion = 2;
 var DEBUG = false;
-var sleepIterations = 0;
+var SEARCH_BLOCK_TIME = 5000;
+var DATASTORE_REFRESH_TIMEOUT = 5 * 60 * 1000;
 
 angular.module('MovieSearchApp', []).
 controller('MovieSearchCtrl', function($scope, $http, $timeout) {
+	
+	$scope.clientVersion = '0.3.2';
 	
 	if(DEBUG) {
 		$scope.mode = 'dev';
@@ -16,7 +20,12 @@ controller('MovieSearchCtrl', function($scope, $http, $timeout) {
 	/**
 	 * Initialize active supplier urls on pageload
 	 */
-	$timeout(function () {
+	$timeout(function() {
+		
+		var datastoreVersion = localStorageLoad("moviesearchClientVersion");
+		if(datastoreVersion !== $scope.clientVersion) {
+			localStorageClear();
+		}
 		
 		var delta = 0;
 		$scope.lastAccess = localStorageLoad("mansehrSULastAccess");
@@ -26,10 +35,9 @@ controller('MovieSearchCtrl', function($scope, $http, $timeout) {
 		}
 		
 		var urls = localStorageLoad("mansehrServiceUrls");
-		if (urls == undefined || isNaN(delta) || delta > 1800000) {
+		if (urls == undefined || isNaN(delta) || delta > DATASTORE_REFRESH_TIMEOUT) {
 			showInfo("Laddade filmtjänster från servern");
-			localStorageClear();
-			$http.get(SERVICE_URI+"?suppliers="+version)
+			$http.get(SERVICE_URI+"?suppliers="+apiVersion)
 				.success(
 					function(data) {
 						parseUrls(data, true);
@@ -37,6 +45,8 @@ controller('MovieSearchCtrl', function($scope, $http, $timeout) {
 								.stringify($scope.supplierUrls));
 						localStorageStore("mansehrSULastAccess",
 								new Date());
+						localStorageStore("moviesearchClientVersion",
+								$scope.clientVersion);
 						$scope.showForm = true;
 					})
 				.error(
@@ -186,6 +196,7 @@ function parseJsonResult(xml, supplier) {
 	if(json.goodMatchResult) {
 		angular.forEach(json.goodMatchResult, function(val) {
 			val.logoUrl = supplier.logoUrl;
+			val.supplier = supplier;
 			$scope.result.good.push(val);
 			supplier.hits.good++;
 			supplier.hits.tot++;
@@ -195,6 +206,7 @@ function parseJsonResult(xml, supplier) {
 	if(json.otherResult) {
 		angular.forEach(json.otherResult, function(val) {
 			val.logoUrl = supplier.logoUrl;
+			val.supplier = supplier;
 			$scope.result.other.push(val);
 			supplier.hits.tot++;
 		});
@@ -259,5 +271,15 @@ function debug(txt) {
 		$scope.title = $attrs['title'];
 		$scope.orderby = $attrs['orderby'];
 	}
+	};
+}).filter('supplierFilter', function() {
+	return function(items) {
+		var newItems = [];
+		angular.forEach(items, function(item) {
+			if(item.supplier.use) {
+				newItems.push(item);
+			}
+		});
+		return newItems;
 	};
 });
