@@ -9,8 +9,6 @@ var DATASTORE_REFRESH_TIMEOUT = 5 * 60 * 1000;
 angular.module('MovieSearchApp', []).
 controller('MovieSearchCtrl', function($scope, $http, $timeout) {
 	
-	$scope.clientVersion = '0.3.2';
-	
 	if(DEBUG) {
 		$scope.mode = 'dev';
 	}
@@ -20,7 +18,8 @@ controller('MovieSearchCtrl', function($scope, $http, $timeout) {
 	/**
 	 * Initialize active supplier urls on pageload
 	 */
-	$timeout(function() {
+	$http.get('/manifest.json').then(function(results) {
+    	$scope.clientVersion = results.data.version;
 		
 		var datastoreVersion = localStorageLoad("moviesearchClientVersion");
 		if(datastoreVersion !== $scope.clientVersion) {
@@ -77,7 +76,8 @@ controller('MovieSearchCtrl', function($scope, $http, $timeout) {
 		}
 		
 		$scope.showFormFocus = true;
-	}, 400);
+	
+	});
 
 
 	$scope.formSubmit = function() {

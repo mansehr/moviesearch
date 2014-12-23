@@ -3,7 +3,7 @@
 
   "name": "Filmsök",
   "description": "Sök efter streamingsbara filmer på svenska distributörers sidor",
-  "version": "0.3.3",
+  "version": "0.3.4",
 
   "icons": { "16": "icon.png",
            "48": "icon48.png",
