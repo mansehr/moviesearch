@@ -205,6 +205,7 @@ function parseJsonResult(xml, supplier) {
 	
 	localStorageStore("movieSearchResult", JSON.stringify($scope.result));
 	$scope.updateLocalStore();
+	$scope.showForm = true;
 }
 
 function localStorageLoad(id) {
@@ -216,11 +217,13 @@ function localStorageStore(id, data) {
 }
 
 function localStorageClear() {
+	console.log('Clear local storage');
 	localStorage.clear();
 }
 
 var messageTimer;
 function showInfo(mess) {
+	console.log(mess);
 	$scope.message = mess;
 	$scope.errorMessage = false;
 }
@@ -249,8 +252,8 @@ function debug(txt) {
 		   $timeout(function() {
 			   element[0].focus(); 
 		   });
-	        }
-		      });
+	      }
+		});
 	   }
   	};
 }).directive('msResultList', function() {

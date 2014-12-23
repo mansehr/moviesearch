@@ -2,6 +2,7 @@
 <html xmlns:ng="http://angularjs.org" ng-app="MovieSearchApp">
   <head>
 	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Search streaming movie</title>
     <style>
        body {
@@ -41,7 +42,7 @@
       
       #settings #suppliers_list {
 	  	border: 1px solid black;
-		background-color: #fffffc;
+		background-color: #fefefe;
 		width: 180px;
 		float: right; 
       }
@@ -118,15 +119,15 @@
 		}
 		#footer a {
 			color: #000;
+			outline: none
 		}
     </style>
   </head>
-  <body ng-controller="MovieSearchCtrl"> 
+  <body ng-controller="MovieSearchCtrl as ctrl"> 
   	<p id="debugField" ng-show="debugMessage != '' && mode == 'dev'">{{debugMessage}}</p>
     <div id="popup">
 	    <div id="settings">
 			<ul id="suppliers_list" >
-			  <li>Filmtjänster:</li>
 			  <li ng-repeat="url in supplierUrls track by $index" >
 				<label><input type="checkbox" ng-model="url.use" ng-change="updateLocalStore()"/>
 				{{url.id}}</label>
@@ -140,7 +141,7 @@
 		<img id="search_img" src="./loading.gif" ng-show="!showForm" />
 		
 		<form ng-submit="formSubmit()" ng-show="showForm">
-			<h1 id="title">Sök streamingfilm:</h1>
+			<h1 id="title">Filmsök</h1>
 			<input type="text" id="movie_name" ng-model="movieName" focus-me="showFormFocus" placeholder="Ange film att söka efter" size=53 /> 
 		</form>
 		
