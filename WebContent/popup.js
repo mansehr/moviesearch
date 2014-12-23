@@ -171,7 +171,8 @@ function callParserService(parseData, sup) {
 	$http.post(SERVICE_URI, 
 		"supplier=" + encodeURIComponent(sup.id) +
 		"&data=" + encodeURIComponent(parseData) +
-		"&movieName=" + encodeURIComponent($scope.movieName),
+		"&movieName=" + encodeURIComponent($scope.movieName) +
+		"&version=" + apiVersion,
 		{headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
 	).success(function(data) {
 		parseJsonResult(decodeURIComponent(data), sup);
