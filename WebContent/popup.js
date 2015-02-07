@@ -1,7 +1,7 @@
 var SERVICE_URI = "http://mansehrmoviesearch.appspot.com/mansehr_moviesearch";
 
 
-var apiVersion = 2;
+var apiVersion = 3;
 var DEBUG = false;
 var SEARCH_BLOCK_TIME = 5000;
 var DATASTORE_REFRESH_TIMEOUT = 5 * 60 * 1000;
