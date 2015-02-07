@@ -74,8 +74,6 @@ controller('MovieSearchCtrl', function($scope, $http, $timeout) {
 		} else {
 			resetResult();
 		}
-		
-		$scope.showFormFocus = true;
 	
 	});
 
@@ -248,13 +246,17 @@ function debug(txt) {
   return {
 	   link: function(scope, element, attrs) {
 		   var model = $parse(attrs.focusMe);
-		      scope.$watch(model, function(value) {
-	        if(value === true) { 
 		   $timeout(function() {
 			   element[0].focus(); 
-		   });
-	      }
-		});
+		   }, 400);
+		   
+		   scope.$watch(model, function(value) {
+		       if(value === true) { 
+				   $timeout(function() {
+					   element[0].focus(); 
+				   });
+			   }
+			});
 	   }
   	};
 }).directive('msResultList', function() {
