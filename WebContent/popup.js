@@ -146,13 +146,23 @@ function searchSuppliers() {
 		
 		sup.hits = {good : 'R', tot : 'R'};
 		
-		$http.get(sup.url + $scope.movieName)
-		.success(function(data) {
-			callParserService(data, sup);
-		})
-		.error(function(data) {
-			supplierError(data, sup);
-		});
+		chrome.permissions.request({
+          origins: [sup.url]
+        }, function(granted) {
+          // The callback argument will be true if the user granted the permissions.
+          if (granted) {
+        	  $http.get(sup.url + $scope.movieName)
+	      		.success(function(data) {
+	      			callParserService(data, sup);
+	      		})
+	      		.error(function(data) {
+	      			supplierError(data, sup);
+	      		});
+          } else {
+        	  supplierError('No permission', sup);
+          }
+        });
+		
 	});
 	return searching;
 }

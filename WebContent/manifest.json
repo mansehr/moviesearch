@@ -3,13 +3,16 @@
 
   "name": "Filmsök",
   "description": "Sök efter streamingsbara filmer på svenska distributörers sidor",
-  "version": "0.3.6",
+  "version": "0.3.7",
 
   "icons": { "16": "icon.png",
            "48": "icon48.png",
           "128": "icon128.png" },
-          
-  "permissions": [
+  "permissions" : [
+  	"http://mansehrmoviesearch.appspot.com/",
+    "storage"
+  ],        
+  "optional_permissions": [
 	"http://www.dreamfilmhd.com/",
     "https://www.film2home.se/",
     "http://www.headweb.com/",
@@ -18,10 +21,7 @@
     "http://www.swefilmer.com/",
 	"http://www.tfplay.org/",
     "http://viaplay.se/",
-    "http://api.voddler.com/",
-	
-    "http://mansehrmoviesearch.appspot.com/",
-    "storage"
+    "http://api.voddler.com/"
   ],
   "browser_action": {
     "default_icon": "icon.png",
