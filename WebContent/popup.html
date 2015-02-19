@@ -5,11 +5,11 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Search streaming movie</title>
     <style>
-       body {
+       html, body {
         min-width: 540px;
+        min-height: 200px
         overflow-x: hidden;
         font-family: Arial, sans-serif;
-        height: 100%;
         padding: 0;
         margin: 0;
       }
@@ -18,7 +18,7 @@
         position: relative;
         height: 100%;
         margin: 0;
-        padding: 5px;
+        padding: 4px;
       }
       
       .errorMessage {
@@ -34,6 +34,10 @@
       form {
       	display: block;
       }
+      
+      input[type=text] {
+      	font-size: 1.2em;
+      }
 
       #settings {
 	  	float: right;
@@ -43,7 +47,7 @@
       #settings #suppliers_list {
 	  	border: 1px solid black;
 		background-color: #fefefe;
-		width: 180px;
+		width: 150px;
 		float: right; 
       }
       
@@ -142,7 +146,7 @@
 		
 		<form ng-submit="formSubmit()" ng-show="showForm">
 			<h1 id="title">Filmsök</h1>
-			<input type="text" id="movie_name" ng-model="movieName" focus-me="showForm" placeholder="Ange film att söka efter" size=53 /> 
+			<input type="text" id="movie_name" ng-model="movieName" focus-me="showForm" placeholder="Ange film att söka efter" size=42 /> 
 		</form>
 		
 		<script type="text/ng-template" id="/ms-result-list-item.html">
