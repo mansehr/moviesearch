@@ -3,7 +3,7 @@
 
   "name": "Filmsök",
   "description": "Sök efter streamingsbara filmer på svenska distributörers sidor",
-  "version": "0.3.8",
+  "version": "0.4.0",
 
   "icons": { "16": "icon.png",
            "48": "icon48.png",
@@ -13,15 +13,8 @@
     "storage"
   ],        
   "optional_permissions": [
-	"http://www.dreamfilmhd.com/",
-    "https://www.film2home.se/",
-    "http://www.headweb.com/",
-	"https://www.plejmo.com/",
-    "http://sfanytime.com/",
-    "http://www.swefilmer.com/",
-	"http://www.tfplay.org/",
-    "http://viaplay.se/",
-    "http://api.voddler.com/"
+	"http://*/*",
+    "https://*/*"
   ],
   "browser_action": {
     "default_icon": "icon.png",
